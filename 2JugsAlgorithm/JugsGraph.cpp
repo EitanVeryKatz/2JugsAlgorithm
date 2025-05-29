@@ -112,6 +112,7 @@ void JugsGraph::SetUpVEdgesForJugs(int L, int S)
 			potentialNeighbors.push_back(make_pair(LargeJug, 0)); // Empty small jug
 		}
 
+
 		//make_pair(0, SmallJug), // Empty large jug
 		//make_pair(LargeJug, 0), // Empty small jug
 		//make_pair(min(LargeJug + SmallJug, L), max(0, SmallJug + LargeJug - L)), // Move water from small jug to large
