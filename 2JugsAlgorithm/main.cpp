@@ -1,18 +1,23 @@
 #include <iostream>
 #include "JugsGraphSolver.h"
+#include "JugsDynamicSolver.h"
 
 void main() 
 {
-	int L, S, W;
-	std::cout << "Enter the capacity of the large jug (L): ";
+	int L, S, W, T, A;
+	/*std::cout << "Enter the capacity of the large jug (L): ";*/
 	std::cin >> L;
-	std::cout << "Enter the capacity of the small jug (S): ";
+	//std::cout << "Enter the capacity of the small jug (S): ";
 	std::cin >> S;
-	std::cout << "Enter the target amount of water (W): ";
+	//std::cout << "Enter the target amount of water (W): ";
 	std::cin >> W;
+	//cout << "enter algo type: ";
+	std::cin >> A;
+	std::cin >> T;
 
-	//JugsGraphSolver graph(L, S, 1);
-	int distance = 0;
-	//graph.Solve(W, distance);
+
+	
+	JugsGraphSolver g(L, S, T);
+	g.Solve(W);
 
 }

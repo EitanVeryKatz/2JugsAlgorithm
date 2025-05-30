@@ -59,7 +59,8 @@ int JugsGraphSolver::BFS(vertice* start, vertice* goal)
 		if (*current == *goal)
 		{
 			// Reconstruct the path
-			return distance[*current]; // Return the distance to the goal
+			break;
+			
 		}
 		else 
 		{
@@ -77,6 +78,8 @@ int JugsGraphSolver::BFS(vertice* start, vertice* goal)
 			}
 		}
 	}
+
+	return distance[*goal]; // Return the distance to the goal
 }
 
 void JugsGraphSolver::SetUpVEdgesForJugs(int L, int S)
@@ -134,7 +137,7 @@ void JugsGraphSolver::SetUpVEdgesForJugs(int L, int S)
 	}
 }
 
-void JugsGraphSolver::Solve(int W, int& d)
+void JugsGraphSolver::Solve(int W)
 {
 	// Solve the jugs problem using BFS
 	auto startTimer = chrono::high_resolution_clock::now();
@@ -142,31 +145,35 @@ void JugsGraphSolver::Solve(int W, int& d)
 	vertice start = make_pair(0, 0); // Starting state (both jugs empty)
 	vertice goal = make_pair(W, 0); // Goal state (large jug has W liters, small jug is empty)
 
-	d = BFS(&start, &goal); // Get the distance to the goal
+	int d = BFS(&start, &goal); // Get the distance to the goal
 
 	auto end = chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - startTimer);
 	
 	if (d == INFINITY) {
-		std::cout << "It's not possible to measure " << W << " units with the given jugs.\n";
+		std::cout << "No solution."<<endl;
+	}
+	else {
+		// Reconstruct the path from start to goal
+		list<string> path;
+		vertice current = goal;
+
+		while (current != start) {
+			path.push_front(parent[current].second);
+			current = *parent[current].first; // Move to parent
+		}
+
+		std::cout << "Number of operations: " << d << "\n";
+		std::cout << "Operations: " << endl;
+		for (const auto& action : path) {
+			std::cout << action << endl;
+		}
 	}
 
-	// Reconstruct the path from start to goal
-	list<string> path;
-	vertice current = goal;
-
-	while (current != start) {
-		path.push_front(parent[current].second);
-		current = *parent[current].first; // Move to parent
-	}
-	std::cout << "Number of operations: " << d << "\n";
-	std::cout << "Operations: " << endl;
-	for (const auto& action : path) {
-		std::cout << action << endl;
-	}
 	if (runTimeWanted) {
 		std::cout << "Function took " << duration.count() << " microseconds." << std::endl;
 	}
+
 	std::cout << "\n";
 }
 

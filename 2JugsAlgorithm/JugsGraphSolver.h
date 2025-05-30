@@ -36,6 +36,6 @@ public:
 			}
 		}
 	}
-	void Solve (int W, int& d) override;
+	void Solve (int W) override;
 };
 

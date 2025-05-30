@@ -18,6 +18,7 @@ protected:
 	bool runTimeWanted;
 
 public:
-	void virtual Solve(int W, int& d) = 0;
+	void virtual Solve(int W) = 0;
+	virtual ~JugsProblemSolver() {}
 };
 
