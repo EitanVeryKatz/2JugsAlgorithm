@@ -7,8 +7,8 @@ class JugsGraphSolver:JugsProblemSolver
 {
 private:
 	map <vertice, list <edge*> > Vertices; // Adjacency list representation
-	map <vertice, edge> parent; // Map to store parent vertices for path reconstruction
-	map <vertice, int> distance; // Map to store distances from the start vertex
+	
+	
 
 	void MakeEmptyGraph(int L, int S);
 	void AddEdge(vertice u, vertice v,string action);
@@ -30,7 +30,7 @@ public:
 		{
 			for (auto& e : v.second)
 			{
-				delete e->first; // Free the vertice (state) itself
+				 // Free the vertice (state) itself
 				delete e; // Free the edge itself
 
 			}
