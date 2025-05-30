@@ -127,11 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="JugsGraph.cpp" />
+    <ClCompile Include="JugsDynamicSolver.cpp" />
+    <ClCompile Include="JugsGraphSolver.cpp" />
+    <ClCompile Include="JugsProblemSolver.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="JugsGraph.h" />
+    <ClInclude Include="JugsDynamicSolver.h" />
+    <ClInclude Include="JugsGraphSolver.h" />
+    <ClInclude Include="JugsProblemSolver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

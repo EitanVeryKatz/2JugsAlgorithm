@@ -1,8 +1,7 @@
-#include "JugsGraph.h"
+#include "JugsGraphSolver.h"
 #include <list>
 #include <queue>
 #include <map>
-#include <utility> // for std::pair
 #include <unordered_set>
 #include <iostream>
 #include <chrono>

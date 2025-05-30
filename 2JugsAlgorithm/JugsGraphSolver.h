@@ -1,24 +1,15 @@
 #pragma once
-#include <list>
-#include <utility> // for std::pair
-#include <map>
-#include<vector>
-#include <string>
-#define INFINITY -1
-using namespace std;
 
-typedef pair<int, int> vertice; // Represents the state of the jugs (x, y)
-typedef pair<vertice*, string> edge;
+#include "JugsProblemSolver.h"
 
 
-class JugsGraphSolver
+class JugsGraphSolver:JugsProblemSolver
 {
 private:
 	map <vertice, list <edge*> > Vertices; // Adjacency list representation
 	map <vertice, edge> parent; // Map to store parent vertices for path reconstruction
 	map <vertice, int> distance; // Map to store distances from the start vertex
 
-	bool runTimeWanted;
 	void MakeEmptyGraph(int L, int S);
 	void AddEdge(vertice u, vertice v,string action);
 	void SetUpVEdgesForJugs(int L, int S);
@@ -45,6 +36,6 @@ public:
 			}
 		}
 	}
-	void Solve(int W, int& d);
+	void Solve (int W, int& d) override;
 };
 

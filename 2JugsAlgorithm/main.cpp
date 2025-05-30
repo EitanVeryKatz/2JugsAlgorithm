@@ -1,5 +1,5 @@
 #include <iostream>
-#include "JugsGraph.h"
+#include "JugsGraphSolver.h"
 
 void main() 
 {
@@ -11,8 +11,8 @@ void main()
 	std::cout << "Enter the target amount of water (W): ";
 	std::cin >> W;
 
-	JugsGraphSolver graph(L, S, 1);
+	//JugsGraphSolver graph(L, S, 1);
 	int distance = 0;
-	graph.Solve(W, distance);
+	//graph.Solve(W, distance);
 
 }
