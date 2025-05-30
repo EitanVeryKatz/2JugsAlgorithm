@@ -5,38 +5,40 @@
 #include <utility> // for std::pair
 #include <unordered_set>
 #include <iostream>
+#include <chrono>
 
-
-void JugsGraph::MakeEmptyGraph(int n)
+void JugsGraphSolver::MakeEmptyGraph(int L,int S)
 {
-	for (int i = 0; i <= n; ++i)
+	for (int i = 0; i <= L; ++i)
 	{
-		for (int j = 0; j <= n; ++j)
+		for (int j = 0; j <= S; ++j)
 		{
 			vertice v = make_pair(i, j);
-			Vertices[v] = list<vertice*>(); // Initialize the adjacency list for each vertice
+			Vertices[v] = list<edge*>(); // Initialize the adjacency list for each vertice
 		}
 	}
 }
 
-list<vertice*> JugsGraph::GetAdjList(vertice u)
+list<edge*> JugsGraphSolver::GetAdjList(vertice u)
 {
 	//returns the adjacency list of the graph sorted by value
-	list<vertice*> adjList = Vertices[u];
+	list<edge*> adjList = Vertices[u];
 	adjList.sort(); // Sort the adjacency list by value
 	return adjList;
 }
 
-void JugsGraph::AddEdge(vertice u, vertice v) 
+void JugsGraphSolver::AddEdge(vertice u, vertice v,string action) 
 {
-	cout << "Adding edge from (" << u.first << ", " << u.second << ") to (" << v.first << ", " << v.second << ")\n"; // Debug output
 	vertice* newNeighbor = new vertice;
+	edge* newEdge = new edge;
 	newNeighbor->first = v.first;
 	newNeighbor->second = v.second;
-	Vertices[u].push_back(newNeighbor);
+	newEdge->first = newNeighbor; // Set the edge's source to u	
+	newEdge->second = action; // Set the edge's destination to v
+	Vertices[u].push_back(newEdge);
 }
 
-int JugsGraph::BFS(vertice* start, vertice* goal) 
+int JugsGraphSolver::BFS(vertice* start, vertice* goal) 
 {
 	// Implement BFS to find the shortest path from start to goal
 	queue<vertice*> queue;
@@ -44,19 +46,17 @@ int JugsGraph::BFS(vertice* start, vertice* goal)
 	for (auto& v : Vertices)
 	{
 		distance[v.first] = INFINITY; // Initialize distances to -1
-		parent[v.first] = nullptr; // Initialize parent to an invalid state
+		parent[v.first].first = nullptr; // Initialize parent to an invalid state
 	}
 
 	distance[*start] = 0; // Distance to start is 0
-	parent[*start] = nullptr; // Start has no parent
+	parent[*start].first = nullptr; // Start has no parent
 	queue.push(start);
 
 	while (!queue.empty())
 	{
 		vertice* current = queue.front();
 		queue.pop();
-		cout << "Current: (" << current->first << ", " << current->second << ")\n"; // Debug output
-
 		if (*current == *goal)
 		{
 			// Reconstruct the path
@@ -64,15 +64,14 @@ int JugsGraph::BFS(vertice* start, vertice* goal)
 		}
 		else 
 		{
-			for (auto& neighbor : GetAdjList(*current))
+			for (auto& edge : GetAdjList(*current))
 			{
+				vertice* neighbor = edge->first; // Get the neighbor vertice from the edge
 				if (distance[*neighbor] == INFINITY) // If not visited
 				{
-					cout << "	Visiting: (" << neighbor->first << ", " << neighbor->second << ")\n"; // Debug output
-					cout << "	Setting Parent of (" << neighbor->first << ", " << neighbor->second << ") to (" << current->first << ", " << current->second << ")\n"; // Debug output
-					
 					distance[*neighbor] = distance[*current] + 1; // Update distance
-					parent[*neighbor] = current; // Set parent
+					parent[*neighbor].first = current; // Set parent
+					parent[*neighbor].second = edge->second;
 					
 					queue.push(neighbor); // Enqueue the neighbor
 				}
@@ -81,68 +80,94 @@ int JugsGraph::BFS(vertice* start, vertice* goal)
 	}
 }
 
-void JugsGraph::SetUpVEdgesForJugs(int L, int S)
+void JugsGraphSolver::SetUpVEdgesForJugs(int L, int S)
 {
 	for (auto& v : Vertices) {
 		int LargeJug = v.first.first;
 		int SmallJug = v.first.second;
+		map<vertice, string> actions; // Map to store actions for each edge
 
 		
 		vector<vertice> potentialNeighbors;
-		if (LargeJug < L && SmallJug < S) {
-			// Both jugs can be filled
-			potentialNeighbors.push_back(make_pair(L, SmallJug)); // Fill large jug
-			potentialNeighbors.push_back(make_pair(LargeJug, S)); // Fill small jug
+		if (SmallJug < S) {
+
+			vertice fillSmall = make_pair(LargeJug, S);// Fill small jug
+			potentialNeighbors.push_back(fillSmall);
+			actions[fillSmall] = "Fill small jug"; // Action for filling small jug
+		}
+		if (LargeJug < L) {
+			vertice fillLarge = make_pair(L, SmallJug);// Fill large jug
+			potentialNeighbors.push_back(fillLarge);
+			actions[fillLarge] = "Fill large jug"; // Action for filling large jug
 		}
 		if (LargeJug > 0 && SmallJug < S) {
 			// Large jug can be poured into small jug
 			int pourIntoSmall = min(LargeJug, S - SmallJug);
-			potentialNeighbors.push_back(make_pair(LargeJug - pourIntoSmall, SmallJug + pourIntoSmall)); // Pour from large to small
+			vertice pourLargeToSmall = make_pair(LargeJug - pourIntoSmall, SmallJug + pourIntoSmall);
+			potentialNeighbors.push_back(pourLargeToSmall); // Pour from large to small
+			actions[pourLargeToSmall] = "Pour from large jug to small jug"; // Action for pouring from large to small jug
 		}
 		if (SmallJug > 0 && LargeJug < L) {
 			// Small jug can be poured into large jug
 			int pourIntoLarge = min(SmallJug, L - LargeJug);
-			potentialNeighbors.push_back(make_pair(LargeJug + pourIntoLarge, SmallJug - pourIntoLarge)); // Pour from small to large
+			vertice pourSmallToLarge = make_pair(LargeJug + pourIntoLarge, SmallJug - pourIntoLarge);
+			potentialNeighbors.push_back(pourSmallToLarge); // Pour from small to large
+			actions[pourSmallToLarge] = "Pour from small jug to large jug"; // Action for pouring from small to large jug
 		}
 		if (LargeJug > 0) {
-			potentialNeighbors.push_back(make_pair(0, SmallJug)); // Empty large jug
+			vertice emptyLarge = make_pair(0, SmallJug);
+			actions[emptyLarge] = "Empty large jug"; // Action for emptying large jug
+			potentialNeighbors.push_back(emptyLarge);
 		}
 		if (SmallJug > 0) {
-			potentialNeighbors.push_back(make_pair(LargeJug, 0)); // Empty small jug
+			vertice emptySmall = make_pair(LargeJug, 0);
+			actions[emptySmall] = "Empty small jug"; // Action for emptying small jug
+			potentialNeighbors.push_back(emptySmall);
 		}
 
 		// Add edges only if the target vertex exists in the graph
 		for (const auto& neighbor : potentialNeighbors) {
 			
-				AddEdge(v.first, neighbor);
+				AddEdge(v.first, neighbor,actions[neighbor]);
 
 		}
 
 	}
 }
 
-list<vertice> JugsGraph::Solve(int W, int& d)
+void JugsGraphSolver::Solve(int W, int& d)
 {
 	// Solve the jugs problem using BFS
+	auto startTimer = chrono::high_resolution_clock::now();
+
 	vertice start = make_pair(0, 0); // Starting state (both jugs empty)
 	vertice goal = make_pair(W, 0); // Goal state (large jug has W liters, small jug is empty)
 
 	d = BFS(&start, &goal); // Get the distance to the goal
 
+	auto end = chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - startTimer);
+	
 	if (d == INFINITY) {
-		return list<vertice>(); // No solution found
+		std::cout << "It's not possible to measure " << W << " units with the given jugs.\n";
 	}
 
 	// Reconstruct the path from start to goal
-	list<vertice> path;
+	list<string> path;
 	vertice current = goal;
 
 	while (current != start) {
-		path.push_front(current);
-		current = *parent[current]; // Move to parent
+		path.push_front(parent[current].second);
+		current = *parent[current].first; // Move to parent
 	}
-	path.push_front(start); // Add the start state
-
-	return path; // Return the path from start to goal
+	std::cout << "Number of operations: " << d << "\n";
+	std::cout << "Operations: " << endl;
+	for (const auto& action : path) {
+		std::cout << action << endl;
+	}
+	if (runTimeWanted) {
+		std::cout << "Function took " << duration.count() << " microseconds." << std::endl;
+	}
+	std::cout << "\n";
 }
 

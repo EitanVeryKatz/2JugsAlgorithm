@@ -11,19 +11,8 @@ void main()
 	std::cout << "Enter the target amount of water (W): ";
 	std::cin >> W;
 
-	JugsGraph graph(L, S);
+	JugsGraphSolver graph(L, S, 1);
 	int distance = 0;
-	list<vertice> path = graph.Solve(W, distance);
+	graph.Solve(W, distance);
 
-	if (distance != INFINITY) {
-		std::cout << "Minimum steps to measure " << W << " units: " << distance << "\n";
-		std::cout << "Path: ";
-		for (const auto& v : path) {
-			std::cout << "(" << v.first << ", " << v.second << ") ";
-		}
-		std::cout << "\n";
-	}
-	else {
-		std::cout << "It's not possible to measure " << W << " units with the given jugs.\n";
-	}
 }
