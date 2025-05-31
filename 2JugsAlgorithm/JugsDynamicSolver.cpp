@@ -4,27 +4,28 @@
 
 
 
-int JugsDynamicSolver::BFS(vertice* start, vertice* goal)
+int JugsDynamicSolver::BFS(vertice* i_Start, vertice* i_Goal)
 {
 	// Implement BFS to find the shortest path from start to goal
 	queue<vertice> queue;
-	distance[*start] = 0; // Distance to start is 0
-	queue.push(*start);
-	distance[*goal] = INFINITY;
 
+	distance[*i_Start] = 0; // Distance to start is 0
+	queue.push(*i_Start);
+	distance[*i_Goal] = INFINITY;
 	while (!queue.empty())
 	{
 		vertice current = queue.front();
+
 		queue.pop();
-		if (current == *goal)
+		if (current == *i_Goal)
 		{
 			// Reconstruct the path
 			break;
-
 		}
 		else
 		{
 			map <vertice, string>* neighbors = CalculateAdjList(current,m_SmallJar,m_LargeJar); // Get neighbors of current vertice
+
 			for (auto& edge : *neighbors)
 			{
 				vertice neighbor = edge.first; // Get the neighbor vertice from the edge
@@ -42,6 +43,6 @@ int JugsDynamicSolver::BFS(vertice* start, vertice* goal)
 		}
 	}
 
-	return distance[*goal]; // Return the distance to the goal
+	return distance[*i_Goal]; // Return the distance to the goal
 }
 

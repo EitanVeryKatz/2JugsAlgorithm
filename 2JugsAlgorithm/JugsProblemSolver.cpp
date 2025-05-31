@@ -1,35 +1,35 @@
 #include "JugsProblemSolver.h"
 
-void JugsProblemSolver::Solve(int W) {
+void JugsProblemSolver::Solve(int i_wantedAmountInLargeJar) {
 
 	// Solve the jugs problem using BFS
 	auto startTimer = chrono::high_resolution_clock::now();
 
 	vertice start = make_pair(0, 0); // Starting state (both jugs empty)
-	vertice goal = make_pair(W, 0); // Goal state (large jug has W liters, small jug is empty)
+	vertice goal = make_pair(i_wantedAmountInLargeJar, 0); // Goal state (large jug has W liters, small jug is empty)
 
-	int d = BFS(&start, &goal); // Get the distance to the goal
+	int operationCount = BFS(&start, &goal); // Get the distance to the goal
 
-	auto end = chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - startTimer);
+	auto stopCounter = chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stopCounter - startTimer);
 
-	if (d == INFINITY) {
+	if (operationCount == INFINITY) {
 		std::cout << "No solution." << endl;
 	}
 	else {
 		// Reconstruct the path from start to goal
-		list<string> path;
+		list<string> operationSequence;
 		vertice current = goal;
 
 		while (current != start) {
-			path.push_front(parent[current].second);
+			operationSequence.push_front(parent[current].second);
 			current = parent[current].first; // Move to parent
 		}
 
-		std::cout << "Number of operations: " << d << "\n";
+		std::cout << "Number of operations: " << operationCount << "\n";
 		std::cout << "Operations: " << endl;
-		for (const auto& action : path) {
-			std::cout << action << endl;
+		for (const auto& operation : operationSequence) {
+			std::cout << operation << endl;
 		}
 	}
 
@@ -41,31 +41,31 @@ void JugsProblemSolver::Solve(int W) {
 
 }
 
-map <vertice, string>* JugsProblemSolver::CalculateAdjList(vertice v,int smallJarMaxCapacity,int largeJarMaxCapacity)
+map <vertice, string>* JugsProblemSolver::CalculateAdjList(vertice i__TargetVertice,int i_SmallJarMaxCapacity,int i_LargeJarMaxCapacity)
 {
 
-	int LargeJug = v.first;
-	int SmallJug = v.second;
+	int LargeJug = i__TargetVertice.first;
+	int SmallJug = i__TargetVertice.second;
 
 	map<vertice, string>* potentialNeighbors = new map<vertice, string>;
-	if (SmallJug < smallJarMaxCapacity) {
+	if (SmallJug < i_SmallJarMaxCapacity) {
 
-		vertice fillSmall = make_pair(LargeJug, largeJarMaxCapacity);// Fill small jug
+		vertice fillSmall = make_pair(LargeJug, i_LargeJarMaxCapacity);// Fill small jug
 		(*potentialNeighbors)[fillSmall] = "Fill small jug"; // Action for filling small jug
 	}
-	if (LargeJug < largeJarMaxCapacity) {
-		vertice fillLarge = make_pair(largeJarMaxCapacity, SmallJug);// Fill large jug
+	if (LargeJug < i_LargeJarMaxCapacity) {
+		vertice fillLarge = make_pair(i_LargeJarMaxCapacity, SmallJug);// Fill large jug
 		(*potentialNeighbors)[fillLarge] = "Fill large jug";
 	}
-	if (LargeJug > 0 && SmallJug < smallJarMaxCapacity) {
+	if (LargeJug > 0 && SmallJug < i_SmallJarMaxCapacity) {
 		// Large jug can be poured into small jug
-		int pourIntoSmall = min(LargeJug, smallJarMaxCapacity - SmallJug);
+		int pourIntoSmall = min(LargeJug, i_SmallJarMaxCapacity - SmallJug);
 		vertice pourLargeToSmall = make_pair(LargeJug - pourIntoSmall, SmallJug + pourIntoSmall);
 		(*potentialNeighbors)[pourLargeToSmall] = "Pour from large jug to small jug"; // Pour from large to small
 	}
-	if (SmallJug > 0 && LargeJug < largeJarMaxCapacity) {
+	if (SmallJug > 0 && LargeJug < i_LargeJarMaxCapacity) {
 		// Small jug can be poured into large jug
-		int pourIntoLarge = min(SmallJug, largeJarMaxCapacity - LargeJug);
+		int pourIntoLarge = min(SmallJug, i_LargeJarMaxCapacity - LargeJug);
 		vertice pourSmallToLarge = make_pair(LargeJug + pourIntoLarge, SmallJug - pourIntoLarge);
 		(*potentialNeighbors)[pourSmallToLarge] = "Pour from small jug to large jug"; // Pour from small to large
 	}

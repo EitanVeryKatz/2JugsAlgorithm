@@ -4,16 +4,15 @@
 class JugsDynamicSolver:public JugsProblemSolver
 {
 private:
-
 	const int m_LargeJar;
 	const int m_SmallJar;
-	int BFS(vertice* start, vertice* goal) override;
-	list <edge*> GetAdjList(vertice u);
-public:
+	int BFS(vertice* i_Start, vertice* i_Goal) override;
 
-	JugsDynamicSolver(int L, int S, int T) :m_LargeJar(L),m_SmallJar(S)
+public:
+	JugsDynamicSolver(int i_LargeJugMaxCapacity, int i_SmallJugMaxCapacity, int i_IsRuntimeWanted)
+	:m_LargeJar(i_LargeJugMaxCapacity),m_SmallJar(i_SmallJugMaxCapacity)
 	{
-		runTimeWanted = T;
+		runTimeWanted = i_IsRuntimeWanted;
 	}
 
 };

@@ -1,37 +1,33 @@
 #pragma once
-
 #include "JugsProblemSolver.h"
-
 
 class JugsGraphSolver:public JugsProblemSolver
 {
 private:
-	map <vertice, list <edge*> > Vertices; // Adjacency list representation
-	
-	
+	map <vertice, list <edge*> > m_VerticesAdjList; // Adjacency list representation
 
-	void MakeEmptyGraph(int L, int S);
-	void AddEdge(vertice u, vertice v,string action);
-	void SetUpVEdgesForJugs(int L, int S);
-	int BFS(vertice* start, vertice* goal) override;
-	list <edge*> GetAdjList(vertice u);
-	
+	void MakeEmptyGraph(int i_LargeJugMaxCapacity, int i_SmallJugMaxCapacity);
+	void AddEdge(vertice i_sourceVertice, vertice i_DestinationVertice,string i_actionDescription);
+	void SetUpVEdgesForJugs(int i_LargeJugMaxCapacity, int i_SmallJugMaxCapacity);
+	int BFS(vertice* i_Start, vertice* i_Goal) override;
+	list <edge*> GetAdjList(vertice i_TargetVertice);
 
 public:
-	JugsGraphSolver(int L,int S, int T)
+	JugsGraphSolver(int i_LargeJugMaxCapacity,int i_SmallJugMaxCapacity, int i_isRuntimeWanted)
 	{
-		runTimeWanted = T;
-		MakeEmptyGraph(L,S); // Initialize the graph with vertices based on jug capacitiesl
-		SetUpVEdgesForJugs(L, S);
+		runTimeWanted = i_isRuntimeWanted;
+		MakeEmptyGraph(i_LargeJugMaxCapacity,i_SmallJugMaxCapacity); // Initialize the graph with vertices based on jug capacitiesl
+		SetUpVEdgesForJugs(i_LargeJugMaxCapacity, i_SmallJugMaxCapacity);
 	}
+
 	~JugsGraphSolver()
 	{
-		for (auto& v : Vertices)
+		for (auto& vertice : m_VerticesAdjList)
 		{
-			for (auto& e : v.second)
+			for (auto& neighbor : vertice.second)
 			{
 				 // Free the vertice (state) itself
-				delete e; // Free the edge itself
+				delete neighbor; // Free the edge itself
 
 			}
 		}
