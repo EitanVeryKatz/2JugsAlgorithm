@@ -86,13 +86,10 @@ void JugsGraphSolver::SetUpVEdgesForJugs(int i_LargeJugMaxCapacity, int i_SmallJ
 
 		// Add edges only if the target vertex exists in the graph
 		for (const auto& neighbor : *potentialNeighbors) {
-			
-				AddEdge(verticeEntry.first, neighbor.first,neighbor.second);
-
+			AddEdge(verticeEntry.first, neighbor.first, neighbor.second);
 		}
 
 		delete potentialNeighbors; // Clean up the dynamically allocated memory
-
 	}
 }
 
