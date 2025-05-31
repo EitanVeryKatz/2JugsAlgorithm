@@ -85,7 +85,7 @@ map <vertice, string> *JugsDynamicSolver::CalculateAdjList(vertice v)
 {
 	
 	int LargeJug = v.first;
-	int SmallJug = v.first;
+	int SmallJug = v.second;
 
 	map<vertice, string>* potentialNeighbors = new map<vertice, string>;
 	if (SmallJug < m_SmallJar) {
