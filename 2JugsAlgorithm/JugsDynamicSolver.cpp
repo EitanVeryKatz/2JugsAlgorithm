@@ -1,8 +1,4 @@
-#pragma once
 #include "JugsDynamicSolver.h"
-
-
-
 
 int JugsDynamicSolver::BFS(vertice* i_Start, vertice* i_Goal)
 {

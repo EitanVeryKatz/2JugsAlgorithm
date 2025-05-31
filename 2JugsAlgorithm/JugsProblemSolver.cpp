@@ -48,35 +48,41 @@ map <vertice, string>* JugsProblemSolver::CalculateAdjList(vertice i__TargetVert
 	int SmallJug = i__TargetVertice.second;
 
 	map<vertice, string>* potentialNeighbors = new map<vertice, string>;
-	if (SmallJug < i_SmallJarMaxCapacity) {
 
-		vertice fillSmall = make_pair(LargeJug, i_LargeJarMaxCapacity);// Fill small jug
-		(*potentialNeighbors)[fillSmall] = "Fill small jug"; // Action for filling small jug
+	if (LargeJug > 0) {
+		vertice emptyLarge = make_pair(0, SmallJug);
+		// Action for emptying large jug
+		(*potentialNeighbors)[emptyLarge] = "Empty large jug"; ;
 	}
-	if (LargeJug < i_LargeJarMaxCapacity) {
-		vertice fillLarge = make_pair(i_LargeJarMaxCapacity, SmallJug);// Fill large jug
-		(*potentialNeighbors)[fillLarge] = "Fill large jug";
-	}
+
 	if (LargeJug > 0 && SmallJug < i_SmallJarMaxCapacity) {
 		// Large jug can be poured into small jug
 		int pourIntoSmall = min(LargeJug, i_SmallJarMaxCapacity - SmallJug);
 		vertice pourLargeToSmall = make_pair(LargeJug - pourIntoSmall, SmallJug + pourIntoSmall);
 		(*potentialNeighbors)[pourLargeToSmall] = "Pour from large jug to small jug"; // Pour from large to small
 	}
+
+	if (SmallJug > 0) {
+		vertice emptySmall = make_pair(LargeJug, 0);
+		(*potentialNeighbors)[emptySmall] = "Empty small jug";
+	}
+
 	if (SmallJug > 0 && LargeJug < i_LargeJarMaxCapacity) {
 		// Small jug can be poured into large jug
 		int pourIntoLarge = min(SmallJug, i_LargeJarMaxCapacity - LargeJug);
 		vertice pourSmallToLarge = make_pair(LargeJug + pourIntoLarge, SmallJug - pourIntoLarge);
 		(*potentialNeighbors)[pourSmallToLarge] = "Pour from small jug to large jug"; // Pour from small to large
 	}
-	if (LargeJug > 0) {
-		vertice emptyLarge = make_pair(0, SmallJug);
-		// Action for emptying large jug
-		(*potentialNeighbors)[emptyLarge] = "Empty large jug"; ;
+
+	if (SmallJug < i_SmallJarMaxCapacity) {
+
+		vertice fillSmall = make_pair(LargeJug, i_LargeJarMaxCapacity);// Fill small jug
+		(*potentialNeighbors)[fillSmall] = "Fill small jug"; // Action for filling small jug
 	}
-	if (SmallJug > 0) {
-		vertice emptySmall = make_pair(LargeJug, 0);
-		(*potentialNeighbors)[emptySmall] = "Empty small jug";
+
+	if (LargeJug < i_LargeJarMaxCapacity) {
+		vertice fillLarge = make_pair(i_LargeJarMaxCapacity, SmallJug);// Fill large jug
+		(*potentialNeighbors)[fillLarge] = "Fill large jug";
 	}
 
 	return potentialNeighbors;

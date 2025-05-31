@@ -5,7 +5,7 @@
 #define FirstAlgotrithm 1
 #define SecondAlgotrithm 2
 
-void main() 
+int main()
 {
 	int L, S, W, T, A;
 	std::cin >> L;
@@ -15,7 +15,7 @@ void main()
 	std::cin >> T;
 
 
-	if (L <= 0 || S <= 0 || W < 0 || T < 0 || (A != FirstAlgotrithm && A != SecondAlgotrithm)||T>1){
+	if (L <= 0 || S <= 0 || W < 0 || T < 0 || (A != FirstAlgotrithm && A != SecondAlgotrithm)||T>1||S>L){
 		std::cout << "invalid input.";
 		exit(1);
 	}
