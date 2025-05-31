@@ -1,10 +1,10 @@
 #include "JugsGraphSolver.h"
 #include <list>
-#include <queue>
+
 #include <map>
-#include <unordered_set>
-#include <iostream>
-#include <chrono>
+
+
+
 
 void JugsGraphSolver::MakeEmptyGraph(int L,int S)
 {
@@ -30,9 +30,8 @@ void JugsGraphSolver::AddEdge(vertice u, vertice v,string action)
 {
 	vertice* newNeighbor = new vertice;
 	edge* newEdge = new edge;
-	newNeighbor->first = v.first;
-	newNeighbor->second = v.second;
-	newEdge->first = newNeighbor; // Set the edge's source to u	
+	newEdge->first.first = v.first; // Set the edge's source to u	
+	newEdge->first.second = v.second;
 	newEdge->second = action; // Set the edge's destination to v
 	Vertices[u].push_back(newEdge);
 }
@@ -40,23 +39,21 @@ void JugsGraphSolver::AddEdge(vertice u, vertice v,string action)
 int JugsGraphSolver::BFS(vertice* start, vertice* goal) 
 {
 	// Implement BFS to find the shortest path from start to goal
-	queue<vertice*> queue;
+	queue<vertice> queue;
 
 	for (auto& v : Vertices)
 	{
 		distance[v.first] = INFINITY; // Initialize distances to -1
-		parent[v.first].first = nullptr; // Initialize parent to an invalid state
 	}
 
 	distance[*start] = 0; // Distance to start is 0
-	parent[*start].first = nullptr; // Start has no parent
-	queue.push(start);
+	queue.push(*start);
 
 	while (!queue.empty())
 	{
-		vertice* current = queue.front();
+		vertice current = queue.front();
 		queue.pop();
-		if (*current == *goal)
+		if (current == *goal)
 		{
 			// Reconstruct the path
 			break;
@@ -64,14 +61,14 @@ int JugsGraphSolver::BFS(vertice* start, vertice* goal)
 		}
 		else 
 		{
-			for (auto& edge : GetAdjList(*current))
+			for (auto& edge : GetAdjList(current))
 			{
-				vertice* neighbor = edge->first; // Get the neighbor vertice from the edge
-				if (distance[*neighbor] == INFINITY) // If not visited
+				vertice neighbor = edge->first; // Get the neighbor vertice from the edge
+				if (distance[neighbor] == INFINITY) // If not visited
 				{
-					distance[*neighbor] = distance[*current] + 1; // Update distance
-					parent[*neighbor].first = current; // Set parent
-					parent[*neighbor].second = edge->second;
+					distance[neighbor] = distance[current] + 1; // Update distance
+					parent[neighbor].first = current; // Set parent
+					parent[neighbor].second = edge->second;
 					
 					queue.push(neighbor); // Enqueue the neighbor
 				}
@@ -160,7 +157,7 @@ void JugsGraphSolver::Solve(int W)
 
 		while (current != start) {
 			path.push_front(parent[current].second);
-			current = *parent[current].first; // Move to parent
+			current = parent[current].first; // Move to parent
 		}
 
 		std::cout << "Number of operations: " << d << "\n";

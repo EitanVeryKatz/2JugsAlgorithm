@@ -5,12 +5,14 @@ class JugsDynamicSolver:JugsProblemSolver
 {
 private:
 
-	const int LargeJar;
-	const int SmallJar;
-
+	const int m_LargeJar;
+	const int m_SmallJar;
+	int BFS(vertice* start, vertice* goal);
+	list <edge*> GetAdjList(vertice u);
+	map <vertice,string> *CalculateAdjList(vertice v);
 public:
 
-	JugsDynamicSolver(int L, int S, int T) :LargeJar(L),SmallJar(S)
+	JugsDynamicSolver(int L, int S, int T) :m_LargeJar(L),m_SmallJar(S)
 	{
 		runTimeWanted = T;
 	}
