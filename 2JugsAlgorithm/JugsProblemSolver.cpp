@@ -9,7 +9,7 @@ void JugsProblemSolver::Solve(int i_wantedAmountInLargeJar) {
 	vertice goal = make_pair(i_wantedAmountInLargeJar, 0); // Goal state (large jug has W liters, small jug is empty)
 
 	int numbeOfOperationsNeeded = BFS(&start, &goal); // Get the distance to the goal
-
+	
 	auto stopCounter = chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stopCounter - startTimer);
 
@@ -61,7 +61,7 @@ map <vertice, string>* JugsProblemSolver::CalculateAdjList(vertice i__TargetVert
 		// Large jug can be poured into small jug
 		int pourIntoSmall = min(LargeJug, i_SmallJarMaxCapacity - SmallJug);
 		vertice pourLargeToSmall = make_pair(LargeJug - pourIntoSmall, SmallJug + pourIntoSmall);
-		(*potentialNeighbors)[pourLargeToSmall] = "Pour from large jug to small jug"; // Pour from large to small
+		(*potentialNeighbors)[pourLargeToSmall] = "Transfer from large jug to small jug"; // Pour from large to small
 	}
 
 	if (SmallJug > 0) {
@@ -73,7 +73,7 @@ map <vertice, string>* JugsProblemSolver::CalculateAdjList(vertice i__TargetVert
 		// Small jug can be poured into large jug
 		int pourIntoLarge = min(SmallJug, i_LargeJarMaxCapacity - LargeJug);
 		vertice pourSmallToLarge = make_pair(LargeJug + pourIntoLarge, SmallJug - pourIntoLarge);
-		(*potentialNeighbors)[pourSmallToLarge] = "Pour from small jug to large jug"; // Pour from small to large
+		(*potentialNeighbors)[pourSmallToLarge] = "Transfer from small jug to large jug"; // Pour from small to large
 	}
 
 	if (SmallJug < i_SmallJarMaxCapacity) {
