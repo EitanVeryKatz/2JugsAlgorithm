@@ -43,7 +43,7 @@ int JugsGraphSolver::BFS(vertice* start, vertice* goal)
 
 	for (auto& v : Vertices)
 	{
-		distance[v.first] = INFINITY; // Initialize distances to -1
+		distance[v.first] = INFINITY; // Initialize distances
 	}
 
 	distance[*start] = 0; // Distance to start is 0
@@ -82,95 +82,61 @@ int JugsGraphSolver::BFS(vertice* start, vertice* goal)
 void JugsGraphSolver::SetUpVEdgesForJugs(int L, int S)
 {
 	for (auto& v : Vertices) {
-		int LargeJug = v.first.first;
-		int SmallJug = v.first.second;
-		map<vertice, string> actions; // Map to store actions for each edge
+		map <vertice, string>* potentialNeighbors = CalculateAdjList(v.first, S, L);
 
-		
-		vector<vertice> potentialNeighbors;
-		if (SmallJug < S) {
+		//int LargeJug = v.first.first;
+		//int SmallJug = v.first.second;
+		//map<vertice, string> actions; // Map to store actions for each edge
 
-			vertice fillSmall = make_pair(LargeJug, S);// Fill small jug
-			potentialNeighbors.push_back(fillSmall);
-			actions[fillSmall] = "Fill small jug"; // Action for filling small jug
-		}
-		if (LargeJug < L) {
-			vertice fillLarge = make_pair(L, SmallJug);// Fill large jug
-			potentialNeighbors.push_back(fillLarge);
-			actions[fillLarge] = "Fill large jug"; // Action for filling large jug
-		}
-		if (LargeJug > 0 && SmallJug < S) {
-			// Large jug can be poured into small jug
-			int pourIntoSmall = min(LargeJug, S - SmallJug);
-			vertice pourLargeToSmall = make_pair(LargeJug - pourIntoSmall, SmallJug + pourIntoSmall);
-			potentialNeighbors.push_back(pourLargeToSmall); // Pour from large to small
-			actions[pourLargeToSmall] = "Pour from large jug to small jug"; // Action for pouring from large to small jug
-		}
-		if (SmallJug > 0 && LargeJug < L) {
-			// Small jug can be poured into large jug
-			int pourIntoLarge = min(SmallJug, L - LargeJug);
-			vertice pourSmallToLarge = make_pair(LargeJug + pourIntoLarge, SmallJug - pourIntoLarge);
-			potentialNeighbors.push_back(pourSmallToLarge); // Pour from small to large
-			actions[pourSmallToLarge] = "Pour from small jug to large jug"; // Action for pouring from small to large jug
-		}
-		if (LargeJug > 0) {
-			vertice emptyLarge = make_pair(0, SmallJug);
-			actions[emptyLarge] = "Empty large jug"; // Action for emptying large jug
-			potentialNeighbors.push_back(emptyLarge);
-		}
-		if (SmallJug > 0) {
-			vertice emptySmall = make_pair(LargeJug, 0);
-			actions[emptySmall] = "Empty small jug"; // Action for emptying small jug
-			potentialNeighbors.push_back(emptySmall);
-		}
+		//
+		//vector<vertice> potentialNeighbors;
+		//if (SmallJug < S) {
+
+		//	vertice fillSmall = make_pair(LargeJug, S);// Fill small jug
+		//	potentialNeighbors.push_back(fillSmall);
+		//	actions[fillSmall] = "Fill small jug"; // Action for filling small jug
+		//}
+		//if (LargeJug < L) {
+		//	vertice fillLarge = make_pair(L, SmallJug);// Fill large jug
+		//	potentialNeighbors.push_back(fillLarge);
+		//	actions[fillLarge] = "Fill large jug"; // Action for filling large jug
+		//}
+		//if (LargeJug > 0 && SmallJug < S) {
+		//	// Large jug can be poured into small jug
+		//	int pourIntoSmall = min(LargeJug, S - SmallJug);
+		//	vertice pourLargeToSmall = make_pair(LargeJug - pourIntoSmall, SmallJug + pourIntoSmall);
+		//	potentialNeighbors.push_back(pourLargeToSmall); // Pour from large to small
+		//	actions[pourLargeToSmall] = "Pour from large jug to small jug"; // Action for pouring from large to small jug
+		//}
+		//if (SmallJug > 0 && LargeJug < L) {
+		//	// Small jug can be poured into large jug
+		//	int pourIntoLarge = min(SmallJug, L - LargeJug);
+		//	vertice pourSmallToLarge = make_pair(LargeJug + pourIntoLarge, SmallJug - pourIntoLarge);
+		//	potentialNeighbors.push_back(pourSmallToLarge); // Pour from small to large
+		//	actions[pourSmallToLarge] = "Pour from small jug to large jug"; // Action for pouring from small to large jug
+		//}
+		//if (LargeJug > 0) {
+		//	vertice emptyLarge = make_pair(0, SmallJug);
+		//	actions[emptyLarge] = "Empty large jug"; // Action for emptying large jug
+		//	potentialNeighbors.push_back(emptyLarge);
+		//}
+		//if (SmallJug > 0) {
+		//	vertice emptySmall = make_pair(LargeJug, 0);
+		//	actions[emptySmall] = "Empty small jug"; // Action for emptying small jug
+		//	potentialNeighbors.push_back(emptySmall);
+		//}
 
 		// Add edges only if the target vertex exists in the graph
-		for (const auto& neighbor : potentialNeighbors) {
+		for (const auto& neighbor : *potentialNeighbors) {
 			
-				AddEdge(v.first, neighbor,actions[neighbor]);
+				AddEdge(v.first, neighbor.first,neighbor.second);
 
 		}
+
+		delete potentialNeighbors; // Clean up the dynamically allocated memory
 
 	}
 }
 
-void JugsGraphSolver::Solve(int W)
-{
-	// Solve the jugs problem using BFS
-	auto startTimer = chrono::high_resolution_clock::now();
 
-	vertice start = make_pair(0, 0); // Starting state (both jugs empty)
-	vertice goal = make_pair(W, 0); // Goal state (large jug has W liters, small jug is empty)
-
-	int d = BFS(&start, &goal); // Get the distance to the goal
-
-	auto end = chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - startTimer);
-	
-	if (d == INFINITY) {
-		std::cout << "No solution."<<endl;
-	}
-	else {
-		// Reconstruct the path from start to goal
-		list<string> path;
-		vertice current = goal;
-
-		while (current != start) {
-			path.push_front(parent[current].second);
-			current = parent[current].first; // Move to parent
-		}
-
-		std::cout << "Number of operations: " << d << "\n";
-		std::cout << "Operations: " << endl;
-		for (const auto& action : path) {
-			std::cout << action << endl;
-		}
-	}
-
-	if (runTimeWanted) {
-		std::cout << "Function took " << duration.count() << " microseconds." << std::endl;
-	}
-
-	std::cout << "\n";
-}
 

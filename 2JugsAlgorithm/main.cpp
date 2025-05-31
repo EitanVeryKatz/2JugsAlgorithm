@@ -17,8 +17,8 @@ void main()
 
 
 	
-	/*JugsGraphSolver g(L, S, T);
-	g.Solve(W);*/
+	JugsGraphSolver g(L, S, T);
+	g.Solve(W);
 	JugsDynamicSolver d(L, S, T);
 	d.Solve(W);
 

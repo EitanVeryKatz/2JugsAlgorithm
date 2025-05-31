@@ -3,7 +3,7 @@
 #include "JugsProblemSolver.h"
 
 
-class JugsGraphSolver:JugsProblemSolver
+class JugsGraphSolver:public JugsProblemSolver
 {
 private:
 	map <vertice, list <edge*> > Vertices; // Adjacency list representation
@@ -13,7 +13,7 @@ private:
 	void MakeEmptyGraph(int L, int S);
 	void AddEdge(vertice u, vertice v,string action);
 	void SetUpVEdgesForJugs(int L, int S);
-	int BFS(vertice* start, vertice* goal);
+	int BFS(vertice* start, vertice* goal) override;
 	list <edge*> GetAdjList(vertice u);
 	
 
@@ -36,6 +36,6 @@ public:
 			}
 		}
 	}
-	void Solve (int W) override;
+
 };
 

@@ -1,15 +1,14 @@
 #pragma once
 #include "JugsProblemSolver.h"
 
-class JugsDynamicSolver:JugsProblemSolver
+class JugsDynamicSolver:public JugsProblemSolver
 {
 private:
 
 	const int m_LargeJar;
 	const int m_SmallJar;
-	int BFS(vertice* start, vertice* goal);
+	int BFS(vertice* start, vertice* goal) override;
 	list <edge*> GetAdjList(vertice u);
-	map <vertice,string> *CalculateAdjList(vertice v);
 public:
 
 	JugsDynamicSolver(int L, int S, int T) :m_LargeJar(L),m_SmallJar(S)
@@ -17,6 +16,5 @@ public:
 		runTimeWanted = T;
 	}
 
-	void Solve(int W) override;
 };
 

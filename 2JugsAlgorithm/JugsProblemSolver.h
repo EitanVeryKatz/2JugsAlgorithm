@@ -20,12 +20,13 @@ protected:
 	bool runTimeWanted;
 	map <vertice, edge> parent; // Map to store parent vertices for path reconstruction
 	map <vertice, int> distance; // Map to store distances from the start vertex
+	int virtual BFS(vertice* start, vertice* goal) = 0;
+	map <vertice, string>* CalculateAdjList(vertice v, int smallJarMaxCapacity, int largeJarMaxCapacity);
 
-	
 
 public:
 
-	void virtual Solve(int W) = 0;
+	void virtual Solve(int W);
 	virtual ~JugsProblemSolver() {}
 };
 
