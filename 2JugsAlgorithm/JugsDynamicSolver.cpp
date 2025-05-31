@@ -49,6 +49,7 @@ int JugsDynamicSolver::BFS(vertice* start, vertice* goal)
 	queue<vertice> queue;
 	distance[*start] = 0; // Distance to start is 0
 	queue.push(*start);
+	distance[*goal] = INFINITY;
 
 	while (!queue.empty())
 	{
@@ -65,7 +66,7 @@ int JugsDynamicSolver::BFS(vertice* start, vertice* goal)
 			for (auto& edge : *CalculateAdjList(current))
 			{
 				vertice neighbor = edge.first; // Get the neighbor vertice from the edge
-				if (parent.find(neighbor) != parent.end()) // If not visited
+				if (parent.find(neighbor) == parent.end()) // If not visited
 				{
 					distance[neighbor] = distance[current] + 1; // Update distance
 					parent[neighbor].first = current; // Set parent
@@ -118,5 +119,5 @@ map <vertice, string> *JugsDynamicSolver::CalculateAdjList(vertice v)
 		(*potentialNeighbors)[emptySmall] = "Empty small jug";
 	}
 
-	return potentialNeighbors
+	return potentialNeighbors;
 }

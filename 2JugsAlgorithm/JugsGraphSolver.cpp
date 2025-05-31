@@ -157,7 +157,7 @@ void JugsGraphSolver::Solve(int W)
 
 		while (current != start) {
 			path.push_front(parent[current].second);
-			current = *parent[current].first; // Move to parent
+			current = parent[current].first; // Move to parent
 		}
 
 		std::cout << "Number of operations: " << d << "\n";

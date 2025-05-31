@@ -21,7 +21,7 @@ protected:
 	map <vertice, edge> parent; // Map to store parent vertices for path reconstruction
 	map <vertice, int> distance; // Map to store distances from the start vertex
 
-	vector<
+	
 
 public:
 
